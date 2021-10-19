@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './question.dart';
+import './answer.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,20 +13,30 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State {
-  var QuestoesIndex = 0;
+  var QuestionsIndex = 0;
 
-  void Resposta() {
+  void answerQuestion() {
     setState(() {
-      QuestoesIndex = QuestoesIndex + 1;
+      QuestionsIndex = QuestionsIndex + 1;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    var Questoes = [
-      'Qual seu anime favorito',
-      'Qual nome de seu cachorro',
-      'Oque o Tiago mais ama que bleach'
+    //Criando um Map
+    var Questions = [
+      {
+        'questionText': 'Qual seu anime favorito ?',
+        'answers': ['Sangatsu', 'Boku no hero', 'Tate no Yusha']
+      },
+      {
+        'questionText': 'Qual nome de seu cachorro ?',
+        'answers': ['Lutero', 'Lut', 'Lute']
+      },
+      {
+        'questionText': 'O que o Tiago ama ?',
+        'answers': ['Comer', 'Bleach', 'Mirai Nikki']
+      },
     ];
     return MaterialApp(
       home: Scaffold(
@@ -34,21 +45,11 @@ class MyAppState extends State {
         ),
         body: Column(
           children: <Widget>[
-            Question(Questoes[QuestoesIndex]),
-            ElevatedButton(
-              onPressed: Resposta,
-              child: Text('Resposta - 1'),
-            ),
-            Text(Questoes[QuestoesIndex]),
-            ElevatedButton(
-              onPressed: Resposta,
-              child: Text('Resposta - 2'),
-            ),
-            Text(Questoes[QuestoesIndex]),
-            ElevatedButton(
-              onPressed: Resposta,
-              child: Text('Resposta - 3'),
-            )
+            Question(Questions[QuestionsIndex]['questionText'] as String),
+            ...(Questions[QuestionsIndex]['answers'] as List<String>)
+                .map((answer) {
+              return Answer(answerQuestion, answer);
+            }).toList()
           ],
         ),
       ),
