@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './question.dart';
-import './answer.dart';
+import './result.dart';
+import './quiz.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,45 +13,65 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State {
-  var QuestionsIndex = 0;
+  final questions = const [
+    {
+      'questionText': 'Qual seu anime favorito ?',
+      'answers': [
+        {'text': 'Sangatsu', 'score': 10},
+        {'text': 'Boku no hero', 'score': 0},
+        {'text': 'Tate no Yusha', 'score': 0}
+      ]
+    },
+    {
+      'questionText': 'Qual nome de seu cachorro ?',
+      'answers': [
+        {'text': 'Lutero', 'score': 10},
+        {'text': 'Lut', 'score': 5},
+        {'text': 'Lute', 'score': 0}
+      ]
+    },
+    {
+      'questionText': 'O que o Tiago ama ?',
+      'answers': [
+        {'text': 'Comer', 'score': 3},
+        {'text': 'Bleach', 'score': 5},
+        {'text': 'Mirai Nikki', 'score': 10}
+      ]
+    },
+  ];
+  var questionsIndex = 0;
+  var totalscore = 0;
 
-  void answerQuestion() {
+  void restart() {
     setState(() {
-      QuestionsIndex = QuestionsIndex + 1;
+      questionsIndex = 0;
+      totalscore = 0;
+    });
+  }
+
+  void answerQuestion(int score) {
+    totalscore += score;
+
+    setState(() {
+      questionsIndex = questionsIndex + 1;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    //Criando um Map
-    var Questions = [
-      {
-        'questionText': 'Qual seu anime favorito ?',
-        'answers': ['Sangatsu', 'Boku no hero', 'Tate no Yusha']
-      },
-      {
-        'questionText': 'Qual nome de seu cachorro ?',
-        'answers': ['Lutero', 'Lut', 'Lute']
-      },
-      {
-        'questionText': 'O que o Tiago ama ?',
-        'answers': ['Comer', 'Bleach', 'Mirai Nikki']
-      },
-    ];
+    //Criando um MapSS
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Meu primeiro App'),
+          title: Text('Quiz Aleatório'),
         ),
-        body: Column(
-          children: <Widget>[
-            Question(Questions[QuestionsIndex]['questionText'] as String),
-            ...(Questions[QuestionsIndex]['answers'] as List<String>)
-                .map((answer) {
-              return Answer(answerQuestion, answer);
-            }).toList()
-          ],
-        ),
+        body: questionsIndex < questions.length
+            ? Quiz(
+                answerQuestion: answerQuestion,
+                questions: questions,
+                questionsIndex: questionsIndex)
+            : Result(totalscore, restart),
       ),
     );
   }
